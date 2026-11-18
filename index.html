@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1220">
+<title>TradeLog — ICT + SMC Journal</title>
+<style>
+:root{--bg:#0b1220;--panel:#111c2e;--panel2:#16243a;--line:#26364d;--text:#edf4ff;--muted:#91a4bd;--blue:#5b9cff;--cyan:#63d6d0;--green:#3dd598;--red:#ff7185;--yellow:#f6c768;--radius:16px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(1000px 500px at 80% -10%,#1b3454 0%,transparent 60%),var(--bg);color:var(--text);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;font-weight:650}
+.app{display:flex;min-height:100vh}.sidebar{width:245px;padding:24px 16px;border-right:1px solid var(--line);background:#0c1728;position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;z-index:5}
+.brand{display:flex;gap:11px;align-items:center;padding:4px 10px 28px}.brandmark{height:38px;width:38px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--cyan));display:grid;place-items:center;color:#071323;font-weight:900;font-size:18px}.brand strong{font-size:16px;letter-spacing:.2px}.brand small{display:block;color:var(--muted);font-size:11px}
+.nav-label{color:#60748e;font-size:10px;letter-spacing:1.5px;font-weight:800;padding:12px 12px 8px}.nav button{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:transparent;color:#9db0c8;margin:3px 0;padding:11px 12px}.nav button.active,.nav button:hover{background:#1b2c45;color:white}.nav .ico{width:20px;text-align:center;font-size:16px}.side-note{margin-top:auto;color:#71849c;font-size:11px;padding:14px 10px;border-top:1px solid var(--line)}
+.main{margin-left:245px;width:calc(100% - 245px);padding:30px clamp(18px,3vw,42px) 50px;max-width:1600px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}.eyebrow{color:var(--cyan);font-size:11px;letter-spacing:1.7px;font-weight:800}.topbar h1{margin:3px 0 0;font-size:27px;letter-spacing:-.7px}.date{color:var(--muted);font-size:12px}
+.btn-primary{background:linear-gradient(135deg,#5b9cff,#4bc6d1);color:#061323}.btn-secondary{background:#1c2c43;color:#dceaff;border:1px solid #30445e}.btn-danger{background:#3a1d2b;color:#ff9bab;border:1px solid #633044}.btn-small{padding:7px 10px;font-size:12px}
+.page{display:none}.page.active{display:block}.grid{display:grid;gap:15px}.stats{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:17px}.card{background:linear-gradient(160deg,rgba(22,36,58,.96),rgba(15,27,44,.96));border:1px solid var(--line);border-radius:var(--radius);padding:18px;min-width:0;box-shadow:0 12px 28px #02081425}.stat-label{color:var(--muted);font-size:12px}.stat-value{font-size:27px;font-weight:800;letter-spacing:-.8px;margin:8px 0 2px}.stat-foot{font-size:11px;color:#758ba6}.positive{color:var(--green)!important}.negative{color:var(--red)!important}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:25px 0 12px}.section-head h2{font-size:16px;margin:0}.muted{color:var(--muted)}.two-col{grid-template-columns:1.3fr 1fr}.panel-title{font-weight:750;margin:0 0 14px}.bar-list{display:grid;gap:12px}.bar-row{display:grid;grid-template-columns:105px 1fr 42px;gap:10px;align-items:center;font-size:12px;color:var(--muted)}.track{height:8px;background:#26364d;border-radius:20px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));border-radius:20px}
+.toolbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center}.field, input,select,textarea{background:#0c1728;border:1px solid #2b3e58;color:var(--text);border-radius:9px;padding:10px 11px;outline:none;width:100%}.field:focus,input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #5b9cff20}.toolbar input,.toolbar select{width:auto;min-width:145px}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:13px}table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:12px 13px;border-bottom:1px solid #24344b;text-align:left;white-space:nowrap}th{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#91a4bd;background:#142238}td{font-size:12px}tbody tr:hover{background:#172940}tbody tr:last-child td{border-bottom:0}.pill{display:inline-flex;border-radius:30px;padding:3px 8px;font-size:10px;font-weight:800;background:#223750;color:#bcd4f1}.pill.win{background:#123b35;color:#6ce0b3}.pill.loss{background:#452330;color:#ff9baa}.pill.be{background:#40351d;color:#f6d58d}.empty{text-align:center;padding:35px;color:var(--muted)}
+.modal-back{display:none;position:fixed;inset:0;background:#020712c9;z-index:20;align-items:center;justify-content:center;padding:16px}.modal-back.show{display:flex}.modal{width:min(760px,100%);max-height:92vh;overflow:auto;background:#111e31;border:1px solid #354b67;border-radius:18px;padding:22px;box-shadow:0 30px 90px #0009}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modal h2{font-size:19px;margin:0}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.form-group label{display:block;font-size:11px;color:#a8bad0;margin:0 0 6px}.form-group.full{grid-column:1/-1}.form-group textarea{min-height:75px;resize:vertical}.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+.checklist{display:grid;gap:10px}.check-item{display:flex;gap:12px;align-items:flex-start;background:#0e1a2b;border:1px solid #273a54;padding:13px;border-radius:11px}.check-item input{width:17px;height:17px;margin-top:2px;accent-color:var(--cyan)}.check-item span{font-size:13px}
+.review-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hint{padding:13px 15px;background:#142b3a;border:1px solid #23505a;color:#b8e9e5;border-radius:12px;font-size:12px;margin-bottom:16px}
+.toast{position:fixed;bottom:22px;right:22px;background:#183b35;color:#b8ffe1;padding:12px 16px;border:1px solid #2b7967;border-radius:10px;display:none;z-index:50}
+footer{color:#637991;font-size:11px;margin-top:30px;text-align:center}
+@media(max-width:1050px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.two-col{grid-template-columns:1fr}}
+@media(max-width:720px){.sidebar{width:65px;padding:18px 7px}.brand{padding:0 6px 25px}.brandmark{width:42px;flex:none}.brand-copy,.nav-label,.nav .navtext,.side-note{display:none}.nav button{justify-content:center;padding:12px 5px}.nav .ico{font-size:18px}.main{margin-left:65px;width:calc(100% - 65px);padding:20px 12px 35px}.topbar{align-items:flex-start;flex-direction:column}.topbar h1{font-size:23px}.form-grid{grid-template-columns:1fr}.form-group.full{grid-column:auto}.stats{gap:9px}.card{padding:14px}.stat-value{font-size:22px}.review-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brandmark">T</div><div class="brand-copy"><strong>TradeLog</strong><small>ICT + SMC JOURNAL</small></div></div>
+  <div class="nav-label">WORKSPACE</div>
+  <nav class="nav">
+    <button class="active" data-page="dashboard"><span class="ico">▦</span><span class="navtext">Dashboard</span></button>
+    <button data-page="trades"><span class="ico">▤</span><span class="navtext">My Trades</span></button>
+    <button data-page="checklist"><span class="ico">☑</span><span class="navtext">Pre-Trade Checklist</span></button>
+    <button data-page="review"><span class="ico">↗</span><span class="navtext">Trading Review</span></button>
+    <button data-page="settings"><span class="ico">⚙</span><span class="navtext">Data & Settings</span></button>
+  </nav>
+  <div class="side-note">Your process. Your discipline. Your progress.</div>
+</aside>
+<main class="main">
+  <header class="topbar">
+    <div><div class="eyebrow">TRADING WORKSPACE</div><h1 id="pageTitle">Dashboard</h1><div class="date" id="today"></div></div>
+    <button class="btn-primary" id="addTop">＋ Add New Trade</button>
+  </header>
+
+  <section class="page active" id="dashboard">
+    <div class="grid stats">
+      <div class="card"><div class="stat-label">Total Trades</div><div class="stat-value" id="sTotal">0</div><div class="stat-foot">All recorded trades</div></div>
+      <div class="card"><div class="stat-label">Win Rate</div><div class="stat-value" id="sWin">0%</div><div class="stat-foot">Wins ÷ closed trades</div></div>
+      <div class="card"><div class="stat-label">Net P/L</div><div class="stat-value" id="sPL">$0.00</div><div class="stat-foot">Based on your entered P/L</div></div>
+      <div class="card"><div class="stat-label">Average R</div><div class="stat-value" id="sR">0.00R</div><div class="stat-foot">Average result per trade</div></div>
+    </div>
+    <div class="grid two-col">
+      <div class="card"><h3 class="panel-title">Performance Overview</h3><div class="bar-list" id="performanceBars"></div></div>
+      <div class="card"><h3 class="panel-title">Trading Snapshot</h3><div class="bar-list" id="snapshot"></div></div>
+    </div>
+    <div class="section-head"><h2>Recent Trades</h2><button class="btn-secondary btn-small" data-goto="trades">View all trades →</button></div>
+    <div class="card" style="padding:0"><div class="table-wrap" style="border:0"><table><thead><tr><th>Date</th><th>Market</th><th>Pair / Coin</th><th>Direction</th><th>Setup</th><th>Result</th><th>P/L</th></tr></thead><tbody id="recentRows"></tbody></table></div></div>
+  </section>
+
+  <section class="page" id="trades">
+    <div class="hint">Add each completed trade. The R result is calculated automatically from entry, stop loss, exit price and direction. Enter actual P/L from your broker or exchange.</div>
+    <div class="section-head" style="margin-top:0"><h2>Trade History</h2><div class="toolbar"><input id="searchTrades" placeholder="Search pair or setup…"><select id="filterMarket"><option value="">All markets</option><option>Forex</option><option>Crypto</option></select><button class="btn-primary" id="addTrade">＋ Add Trade</button></div></div>
+    <div class="card" style="padding:0"><div class="table-wrap" style="border:0"><table><thead><tr><th>Date</th><th>Market</th><th>Pair / Coin</th><th>Direction</th><th>Setup</th><th>Entry</th><th>Exit</th><th>R</th><th>P/L</th><th>Actions</th></tr></thead><tbody id="tradeRows"></tbody></table></div></div>
+  </section>
+
+  <section class="page" id="checklist">
+    <div class="hint">Use this before entering a trade. This checklist is a discipline tool, not a signal. You can tick the items as you review your setup.</div>
+    <div class="card"><h3 class="panel-title">ICT + SMC Pre-Trade Checklist</h3><div class="checklist" id="checks"></div><div class="section-head"><span class="muted" id="checkCount">0 of 10 completed</span><button class="btn-secondary btn-small" id="resetChecks">Reset checklist</button></div></div>
+  </section>
+
+  <section class="page" id="review">
+    <div class="grid stats">
+      <div class="card"><div class="stat-label">Winning Trades</div><div class="stat-value positive" id="rWins">0</div></div>
+      <div class="card"><div class="stat-label">Losing Trades</div><div class="stat-value negative" id="rLosses">0</div></div>
+      <div class="card"><div class="stat-label">Break-even</div><div class="stat-value" id="rBE">0</div></div>
+      <div class="card"><div class="stat-label">Plan Followed</div><div class="stat-value" id="rPlan">0%</div></div>
+    </div>
+    <div class="card"><h3 class="panel-title">Review Your Trading</h3><p class="muted">Use these prompts at the end of each week. Your answers stay in this browser.</p>
+      <div class="form-grid review-grid">
+        <div class="form-group"><label>What did I do well this week?</label><textarea id="revGood" placeholder="e.g. Waited for confirmation…"></textarea></div>
+        <div class="form-group"><label>What mistake happened most often?</label><textarea id="revMistake" placeholder="e.g. Entered too early…"></textarea></div>
+        <div class="form-group"><label>What did I learn?</label><textarea id="revLearn" placeholder="My key lesson…"></textarea></div>
+        <div class="form-group"><label>One improvement for next week</label><textarea id="revImprove" placeholder="One clear action…"></textarea></div>
+      </div><div class="modal-actions"><button class="btn-primary" id="saveReview">Save Weekly Review</button></div>
+    </div>
+  </section>
+
+  <section class="page" id="settings">
+    <div class="card"><h3 class="panel-title">Your Journal Data</h3><p class="muted">Your trades are saved in this browser on this device. Export backups regularly. This static website does not sync data between devices.</p>
+      <div class="toolbar"><button class="btn-primary" id="exportCsv">Export Trades CSV</button><button class="btn-secondary" id="backupJson">Download Full Backup</button><label class="btn-secondary" for="importFile">Import Backup</label><input id="importFile" type="file" accept=".json" style="display:none"></div>
+    </div>
+    <div class="card" style="margin-top:15px"><h3 class="panel-title">About this version</h3><p class="muted">TradeLog is a browser-based educational journal. It does not connect to a broker, place orders, provide signals, or store data on a server. Never enter passwords, API keys or sensitive account credentials.</p><button class="btn-danger" id="clearData">Delete all local journal data</button></div>
+  </section>
+  <footer>TRADELOG • ICT + SMC JOURNAL • Educational tool — not financial advice</footer>
+</main>
+</div>
+
+<div class="modal-back" id="tradeModal"><div class="modal">
+  <div class="modal-head"><h2 id="modalTitle">Add New Trade</h2><button class="btn-secondary btn-small" id="closeModal">✕</button></div>
+  <form id="tradeForm"><input type="hidden" id="editId">
+    <div class="form-grid">
+      <div class="form-group"><label>Date *</label><input type="date" id="fDate" required></div>
+      <div class="form-group"><label>Market *</label><select id="fMarket" required><option value="Forex">Forex</option><option value="Crypto">Crypto</option></select></div>
+      <div class="form-group"><label>Pair / Coin *</label><input id="fAsset" placeholder="e.g. EURUSD / BTCUSDT" required></div>
+      <div class="form-group"><label>Trading Session</label><select id="fSession"><option value="">Select session</option><option>Asian</option><option>London</option><option>New York</option><option>London–New York Overlap</option></select></div>
+      <div class="form-group"><label>Direction *</label><select id="fDirection"><option>Long</option><option>Short</option></select></div>
+      <div class="form-group"><label>ICT / SMC Setup</label><select id="fSetup"><option>Liquidity Sweep</option><option>FVG</option><option>Order Block</option><option>CHOCH / MSS</option><option>BOS</option><option>OTE</option><option>Breaker Block</option><option>Other</option></select></div>
+      <div class="form-group"><label>Entry Price *</label><input type="number" step="any" id="fEntry" required placeholder="0.0000"></div>
+      <div class="form-group"><label>Stop Loss *</label><input type="number" step="any" id="fStop" required placeholder="0.0000"></div>
+      <div class="form-group"><label>Exit Price *</label><input type="number" step="any" id="fExit" required placeholder="0.0000"></div>
+      <div class="form-group"><label>Actual P/L (USD)</label><input type="number" step="any" id="fPL" placeholder="e.g. 25 or -10"></div>
+      <div class="form-group"><label>Risk %</label><input type="number" step="any" id="fRisk" placeholder="e.g. 1"></div>
+      <div class="form-group"><label>Followed Trading Plan?</label><select id="fPlan"><option>Yes</option><option>No</option><option>Partially</option></select></div>
+      <div class="form-group"><label>Emotion</label><select id="fEmotion"><option>Calm</option><option>Confident</option><option>Fearful</option><option>FOMO</option><option>Greedy</option><option>Revenge</option><option>Uncertain</option></select></div>
+      <div class="form-group full"><label>Lesson / Notes</label><textarea id="fNotes" placeholder="Why did you take this trade? What can you learn?"></textarea></div>
+    </div>
+    <div class="modal-actions"><button type="button" class="btn-secondary" id="cancelModal">Cancel</button><button class="btn-primary" type="submit">Save Trade</button></div>
+  </form>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+const KEY='tradelog_ict_smc_v1';
+let trades=JSON.parse(localStorage.getItem(KEY)||'[]');
+let review=JSON.parse(localStorage.getItem(KEY+'_review')||'{}');
+const $=id=>document.getElementById(id);
+const fmtMoney=n=>(n<0?'-$':'$')+Math.abs(Number(n||0)).toFixed(2);
+const fmtR=n=>(n>0?'+':'')+Number(n||0).toFixed(2)+'R';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function save(){localStorage.setItem(KEY,JSON.stringify(trades));render()}
+function calcR(t){let e=Number(t.entry),s=Number(t.stop),x=Number(t.exit);if(!e||!s||!x||e===s)return null;return t.direction==='Long'?(x-e)/Math.abs(e-s):(e-x)/Math.abs(e-s)}
+function outcome(r){return r===null?'Open':Math.abs(r)<0.000001?'BE':r>0?'Win':'Loss'}
+function toast(msg){$('toast').textContent=msg;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2400)}
+function nav(page){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===page));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));$('pageTitle').textContent=({dashboard:'Dashboard',trades:'My Trades',checklist:'Pre-Trade Checklist',review:'Trading Review',settings:'Data & Settings'})[page];}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>nav(b.dataset.page)));
+document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>nav(b.dataset.goto)));
+$('today').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+function render(){
+ const rs=trades.map(t=>calcR(t)).filter(v=>v!==null),wins=rs.filter(v=>v>0).length,loss=rs.filter(v=>v<0).length,be=rs.filter(v=>Math.abs(v)<1e-6).length,closed=rs.length;
+ const pl=trades.reduce((a,t)=>a+Number(t.pl||0),0),avg=closed?rs.reduce((a,b)=>a+b,0)/closed:0,plan=trades.filter(t=>t.plan==='Yes').length;
+ $('sTotal').textContent=trades.length;$('sWin').textContent=(closed?wins/closed*100:0).toFixed(1)+'%';$('sPL').textContent=fmtMoney(pl);$('sPL').className='stat-value '+(pl>=0?'positive':'negative');$('sR').textContent=fmtR(avg);
+ $('rWins').textContent=wins;$('rLosses').textContent=loss;$('rBE').textContent=be;$('rPlan').textContent=(trades.length?plan/trades.length*100:0).toFixed(0)+'%';
+ let max=Math.max(wins,loss,be,1);
+ $('performanceBars').innerHTML=[['Wins',wins],['Losses',loss],['Break-even',be]].map(([n,v])=>`<div class="bar-row"><span>${n}</span><div class="track"><div class="fill" style="width:${v/max*100}%"></div></div><b>${v}</b></div>`).join('');
+ let forex=trades.filter(t=>t.market==='Forex').length,crypto=trades.filter(t=>t.market==='Crypto').length;
+ $('snapshot').innerHTML=[['Forex trades',forex],['Crypto trades',crypto],['Plan followed',plan],['Total R',fmtR(rs.reduce((a,b)=>a+b,0))]].map(([n,v])=>`<div class="bar-row" style="grid-template-columns:1fr auto"><span>${n}</span><b style="color:var(--text)">${v}</b></div>`).join('');
+ const recent=[...trades].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+ $('recentRows').innerHTML=recent.length?recent.map(t=>{let r=calcR(t),o=outcome(r);return `<tr><td>${esc(t.date)}</td><td>${esc(t.market)}</td><td>${esc(t.asset)}</td><td>${esc(t.direction)}</td><td>${esc(t.setup)}</td><td><span class="pill ${o.toLowerCase()}">${o==='Open'?'Open':fmtR(r)}</span></td><td class="${Number(t.pl)>=0?'positive':'negative'}">${fmtMoney(t.pl)}</td></tr>`}).join(''):`<tr><td colspan="7" class="empty">No trades yet. Click “Add New Trade” to record your first trade.</td></tr>`;
+ const q=($('searchTrades').value||'').toLowerCase(),m=$('filterMarket').value;
+ const filtered=[...trades].filter(t=>(!m||t.market===m)&&(!q||(t.asset+' '+t.setup).toLowerCase().includes(q))).sort((a,b)=>b.date.localeCompare(a.date));
+ $('tradeRows').innerHTML=filtered.length?filtered.map(t=>{let r=calcR(t);return `<tr><td>${esc(t.date)}</td><td>${esc(t.market)}</td><td>${esc(t.asset)}</td><td>${esc(t.direction)}</td><td>${esc(t.setup)}</td><td>${esc(t.entry)}</td><td>${esc(t.exit)}</td><td class="${r>=0?'positive':'negative'}">${r===null?'—':fmtR(r)}</td><td class="${Number(t.pl)>=0?'positive':'negative'}">${fmtMoney(t.pl)}</td><td><button class="btn-secondary btn-small" onclick="editTrade('${t.id}')">Edit</button> <button class="btn-danger btn-small" onclick="deleteTrade('${t.id}')">Delete</button></td></tr>`}).join(''):`<tr><td colspan="10" class="empty">No matching trades. Add a trade to get started.</td></tr>`;
+}
+function openModal(t=null){$('tradeForm').reset();$('editId').value=t?.id||'';$('modalTitle').textContent=t?'Edit Trade':'Add New Trade';$('fDate').value=t?.date||new Date().toISOString().slice(0,10);$('fMarket').value=t?.market||'Forex';$('fAsset').value=t?.asset||'';$('fSession').value=t?.session||'';$('fDirection').value=t?.direction||'Long';$('fSetup').value=t?.setup||'Liquidity Sweep';$('fEntry').value=t?.entry??'';$('fStop').value=t?.stop??'';$('fExit').value=t?.exit??'';$('fPL').value=t?.pl??'';$('fRisk').value=t?.risk??'';$('fPlan').value=t?.plan||'Yes';$('fEmotion').value=t?.emotion||'Calm';$('fNotes').value=t?.notes||'';$('tradeModal').classList.add('show')}
+function closeModal(){$('tradeModal').classList.remove('show')}
+$('addTop').onclick=$('addTrade').onclick=()=>openModal();$('closeModal').onclick=$('cancelModal').onclick=closeModal;
+$('tradeModal').addEventListener('click',e=>{if(e.target===$('tradeModal'))closeModal()});
+$('tradeForm').onsubmit=e=>{e.preventDefault();let id=$('editId').value||crypto.randomUUID();let t={id,date:$('fDate').value,market:$('fMarket').value,asset:$('fAsset').value.trim().toUpperCase(),session:$('fSession').value,direction:$('fDirection').value,setup:$('fSetup').value,entry:$('fEntry').value,stop:$('fStop').value,exit:$('fExit').value,pl:$('fPL').value||0,risk:$('fRisk').value,plan:$('fPlan').value,emotion:$('fEmotion').value,notes:$('fNotes').value};if(Number(t.entry)===Number(t.stop)){toast('Entry and Stop Loss cannot be the same.');return}let i=trades.findIndex(x=>x.id===id);if(i>=0)trades[i]=t;else trades.push(t);save();closeModal();toast('Trade saved successfully')};
+window.editTrade=id=>openModal(trades.find(t=>t.id===id));
+window.deleteTrade=id=>{if(confirm('Delete this trade?')){trades=trades.filter(t=>t.id!==id);save();toast('Trade deleted')}};
+$('searchTrades').oninput=render;$('filterMarket').onchange=render;
+const questions=['Have I checked my higher-timeframe (HTF) bias?','Is price in a meaningful Premium or Discount area?','Have I identified relevant Buy-Side / Sell-Side Liquidity?','Is there a liquidity sweep if my setup requires one?','Do I have clear structure confirmation (MSS / CHOCH / BOS)?','Is my entry model clear (FVG / OB / OTE / Breaker)?','Is my Stop Loss at a logical invalidation level?','Have I calculated position size and risk before entry?','Is the potential reward worth the risk?','Am I calm and following my plan — not FOMO or revenge?'];
+let ticks=JSON.parse(localStorage.getItem(KEY+'_checks')||'[]');
+function renderChecks(){$('checks').innerHTML=questions.map((q,i)=>`<label class="check-item"><input type="checkbox" data-check="${i}" ${ticks.includes(i)?'checked':''}><span>${q}</span></label>`).join('');$('checkCount').textContent=ticks.length+' of '+questions.length+' completed';document.querySelectorAll('[data-check]').forEach(c=>c.onchange=()=>{let i=Number(c.dataset.check);ticks=c.checked?[...ticks,i]:ticks.filter(x=>x!==i);localStorage.setItem(KEY+'_checks',JSON.stringify(ticks));$('checkCount').textContent=ticks.length+' of '+questions.length+' completed'})}
+$('resetChecks').onclick=()=>{ticks=[];localStorage.setItem(KEY+'_checks','[]');renderChecks()};
+$('saveReview').onclick=()=>{review={good:$('revGood').value,mistake:$('revMistake').value,learn:$('revLearn').value,improve:$('revImprove').value};localStorage.setItem(KEY+'_review',JSON.stringify(review));toast('Weekly review saved')};
+['good','mistake','learn','improve'].forEach(k=>$('rev'+k[0].toUpperCase()+k.slice(1)).value=review[k]||'');
+function download(name,content,type){let a=document.createElement('a'),url=URL.createObjectURL(new Blob([content],{type}));a.href=url;a.download=name;a.click();URL.revokeObjectURL(url)}
+$('exportCsv').onclick=()=>{let keys=['date','market','asset','session','direction','setup','entry','stop','exit','risk','plan','emotion','pl','notes'];let rows=[keys.join(','),...trades.map(t=>keys.map(k=>'"'+String(t[k]??'').replace(/"/g,'""')+'"').join(','))];download('tradelog-trades.csv',rows.join('\n'),'text/csv');toast('CSV exported')};
+$('backupJson').onclick=()=>download('tradelog-backup.json',JSON.stringify({trades,review,checks:ticks},null,2),'application/json');
+$('importFile').onchange=async e=>{let f=e.target.files[0];if(!f)return;try{let d=JSON.parse(await f.text());if(!Array.isArray(d.trades))throw Error();if(confirm('Import backup? This will replace current local journal data.')){trades=d.trades;review=d.review||{};ticks=d.checks||[];localStorage.setItem(KEY+'_review',JSON.stringify(review));localStorage.setItem(KEY+'_checks',JSON.stringify(ticks));save();toast('Backup imported')}}catch(err){alert('Could not read this backup file.')}e.target.value=''};
+$('clearData').onclick=()=>{if(confirm('Permanently delete all trades and saved review data from this browser? Download a backup first if needed.')){trades=[];review={};ticks=[];localStorage.removeItem(KEY);localStorage.removeItem(KEY+'_review');localStorage.removeItem(KEY+'_checks');['revGood','revMistake','revLearn','revImprove'].forEach(id=>$(id).value='');render();renderChecks();toast('Local data cleared')}};
+render();renderChecks();
+</script>
+</body></html>
